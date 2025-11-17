@@ -6,7 +6,7 @@ export const CreateTenant = () => {
     name: "",
     email: "",
     industry: "",
-    status: "",
+    status: "active",
   });
 
   const handleChange = (e) =>
@@ -18,9 +18,9 @@ export const CreateTenant = () => {
     console.log("Form submitted:", form);
     try {
       const { data } = await API.post("/tenant/create", form);
-      console.log("data: ", data);
+      // console.log("data: ", data);
       if (data?.statusCode === 201) {
-        console.log("data: ", data);
+        // console.log("data: ", data);
         alert("Tenant Created Successfully!");
         setForm({ name: "", email: "", industry: "", status: "" });
       } else {
@@ -28,7 +28,7 @@ export const CreateTenant = () => {
       }
     } catch (err) {
       console.log("err: ", err);
-      alert(err.response?.data?.message || "Create Tenant failed");
+      alert(err?.message || "Create Tenant failed");
     }
   };
 
@@ -57,7 +57,12 @@ export const CreateTenant = () => {
       />{" "}
       <br /> <br />
       <label for="status">Choose a status: </label>
-      <select name="status" id="status" onChange={handleChange}>
+      <select
+        name="status"
+        id="status"
+        value={form.status}
+        onChange={handleChange}
+      >
         <option value="active">Active</option>
         <option value="nonactive">non Active</option>
         <option value="else">else</option>

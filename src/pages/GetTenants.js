@@ -9,28 +9,53 @@ export const GetTenanats = () => {
   useEffect(() => {
     const getTenants = async () => {
       const { data } = await API.get("/tenant/get");
+      console.log("data: ", data);
+      if (data?.statusCode === 401) {
+        alert("Token Expired! Please Login Again");
+      }
       setTenants(data?.tenant);
     };
     getTenants();
   }, []);
 
   function openEditPopup(user) {
-    setSelectedTenant(user); // store clicked row data
-    setShowPopup(true); // show popup
+    setSelectedTenant(user);
+    setShowPopup(true);
   }
 
-  const handleSave = async () => {
+  const handleUpdate = async () => {
     try {
       const { data } = await API.put(`/tenant/update`, selectedTenant);
       console.log("data: ", data);
 
-      // After saving, update table (optional)
-      setTenants((prev) =>
-        prev.map((t) => (t._id === selectedTenant._id ? selectedTenant : t))
-      );
+      if (data?.statusCode === 204) {
+        setTenants((prev) =>
+          prev.map((t) => (t._id === selectedTenant._id ? selectedTenant : t))
+        );
 
-      setShowPopup(false);
-      alert("Tenant updated successfully!");
+        setShowPopup(false);
+        alert("Tenant updated successfully!");
+      } else {
+        alert(data?.message || "Error While updating Tenant!");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleDeleteTenant = async (id) => {
+    console.log("id: ", id);
+
+    try {
+      const { data } = await API.delete(`/tenant/delete?id=${id}`);
+      // console.log("data: ", data);
+
+      if (data?.statusCode === 204) {
+        setTenants(data?.data);
+        alert(data?.message);
+      } else {
+        alert("Error While Deleting Tenant");
+      }
     } catch (err) {
       console.log(err);
     }
@@ -52,7 +77,7 @@ export const GetTenanats = () => {
     <>
       <h2>All Tenants here</h2>
 
-      {tenants.length > 0 && (
+      {tenants && tenants.length > 0 ? (
         <table
           style={{
             width: "100%",
@@ -67,6 +92,7 @@ export const GetTenanats = () => {
               <th style={thStyle}>Industry</th>
               <th style={thStyle}>Status</th>
               <th style={thStyle}>Edit</th>
+              <th style={thStyle}>Delete</th>
             </tr>
           </thead>
 
@@ -80,13 +106,23 @@ export const GetTenanats = () => {
                 <td style={tdStyle}>
                   <button onClick={() => openEditPopup(user)}>Edit</button>
                 </td>
+                <td style={tdStyle}>
+                  <button
+                    onClick={() => {
+                      handleDeleteTenant(user._id);
+                    }}
+                  >
+                    Delete
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
+      ) : (
+        <>Currently No tenents present</>
       )}
 
-      {/* POPUP */}
       {showPopup && selectedTenant && (
         <div style={popupOverlay}>
           <div style={popupBox}>
@@ -125,11 +161,29 @@ export const GetTenanats = () => {
             <br />
             <br />
 
+            <select
+              name="status"
+              id="status"
+              value={selectedTenant.status}
+              onChange={(e) =>
+                setSelectedTenant({
+                  ...selectedTenant,
+                  status: e.target.value,
+                })
+              }
+            >
+              <option value="active">Active</option>
+              <option value="nonactive">non Active</option>
+              <option value="else">else</option>
+            </select>
+            <br />
+            <br />
+
             <button onClick={() => setShowPopup(false)}>Close</button>
             <button
               type="submit"
               style={{ marginLeft: "10px" }}
-              onClick={handleSave}
+              onClick={handleUpdate}
             >
               Save
             </button>

@@ -16,7 +16,7 @@ export const Login = () => {
       alert("Login successful");
       window.location.href = "/tenant";
     } catch (err) {
-      alert(err.response?.data?.message || "Login failed");
+      alert(err?.message || "Login failed");
     }
   };
 
