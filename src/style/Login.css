@@ -1,0 +1,89 @@
+/* Shared Container */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f4f4f4;
+}
+
+/* Card */
+.login-card {
+  background-color: white;
+  padding: 30px 35px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 380px;
+  max-width: 90%;
+}
+
+/* Title */
+.login-title {
+  text-align: center;
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+/* Form group */
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+/* Input field */
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #d0d0d0;
+  border-radius: 6px;
+  outline: none;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+  border-color: #4a90e2;
+  box-shadow: 0 0 4px rgba(74, 144, 226, 0.5);
+}
+
+/* Error text (if you later want to add validation) */
+.error-text {
+  color: #e74c3c;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* Button */
+.login-btn {
+  width: 100%;
+  background-color: #4a90e2;
+  color: white;
+  padding: 10px;
+  border: none;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.login-btn:hover {
+  background-color: #357ab7;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .login-card {
+    padding: 25px;
+    width: 90%;
+  }
+
+  .login-title {
+    font-size: 22px;
+  }
+}

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import API from "../helper/api";
 
-export default function Dashboard() {
+export const Dashboard = () => {
   const [data, setData] = useState("");
 
   useEffect(() => {
@@ -14,4 +14,4 @@ export default function Dashboard() {
       <p>{data}</p>
     </div>
   );
-}
+};

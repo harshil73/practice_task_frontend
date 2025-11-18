@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "../style/Register.css";
 import API from "../helper/api";
 
 export const Register = () => {
@@ -10,9 +11,7 @@ export const Register = () => {
 
   const validateForm = () => {
     let newErrors = {};
-    if (!form.name.trim()) {
-      newErrors.name = "**Username is required";
-    }
+    if (!form.name.trim()) newErrors.name = "**Username is required";
     if (!form.email.trim()) {
       newErrors.email = "**Email is required";
     } else if (!/\S+@\S+\.\S+/.test(form.email)) {
@@ -30,54 +29,67 @@ export const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
-      // Submit form data
-      console.log("Form submitted:", form);
       try {
         const { data } = await API.post("/auth/register", form);
         if (data?.statusCode === 200) {
-          console.log("data: ", data);
           alert("Registered successfully!");
           setForm({ name: "", email: "", password: "" });
         } else {
           alert("User Already Exist!");
         }
       } catch (err) {
-        console.log("err: ", err);
         alert(err.response?.data?.message || "Registration failed");
       }
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        name="name"
-        placeholder="Name"
-        value={form.name}
-        onChange={handleChange}
-      />{" "}
-      {errors.name && (
-        <p className="error" style={{ color: "red" }}>
-          {errors.name}
-        </p>
-      )}
-      <br /> <br />
-      <input
-        name="email"
-        placeholder="Email"
-        value={form.email}
-        onChange={handleChange}
-      />{" "}
-      <br /> <br />
-      <input
-        name="password"
-        placeholder="Password"
-        value={form.password}
-        type="password"
-        onChange={handleChange}
-      />{" "}
-      <br /> <br />
-      <button type="submit">Register</button>
-    </form>
+    <div className="register-container">
+      <div className="register-card">
+        <h2 className="register-title">Register</h2>
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>Name</label>
+            <input
+              name="name"
+              value={form.name}
+              onChange={handleChange}
+              className={errors.name ? "input-error" : ""}
+              placeholder="Enter your name"
+            />
+            {errors.name && <p className="error-text">{errors.name}</p>}
+          </div>
+
+          <div className="form-group">
+            <label>Email</label>
+            <input
+              name="email"
+              value={form.email}
+              onChange={handleChange}
+              className={errors.email ? "input-error" : ""}
+              placeholder="Enter your email"
+            />
+            {errors.email && <p className="error-text">{errors.email}</p>}
+          </div>
+
+          <div className="form-group">
+            <label>Password</label>
+            <input
+              name="password"
+              type="password"
+              value={form.password}
+              onChange={handleChange}
+              className={errors.password ? "input-error" : ""}
+              placeholder="Enter your password"
+            />
+            {errors.password && <p className="error-text">{errors.password}</p>}
+          </div>
+
+          <button type="submit" className="register-btn">
+            Register
+          </button>
+        </form>
+      </div>
+    </div>
   );
 };

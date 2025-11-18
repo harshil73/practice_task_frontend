@@ -1,32 +1,35 @@
 import { useEffect, useState } from "react";
 import API from "../helper/api";
+// import { Navigate } from "react-router-dom";
 
 export const GetTenanats = () => {
   const [tenants, setTenants] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
   const [selectedTenant, setSelectedTenant] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const getTenants = async () => {
       const { data } = await API.get("/tenant/get");
       console.log("data: ", data);
-      if (data?.statusCode === 401) {
-        alert("Token Expired! Please Login Again");
-      }
+      // if (data?.statusCode === 401) {
+      //   alert("Token Expired! Please Login Again");
+      //   return (window.location.href = "/login");
+      // }
       setTenants(data?.tenant);
     };
     getTenants();
   }, []);
 
-  function openEditPopup(user) {
+  const openEditPopup = (user) => {
     setSelectedTenant(user);
     setShowPopup(true);
-  }
+  };
 
   const handleUpdate = async () => {
     try {
       const { data } = await API.put(`/tenant/update`, selectedTenant);
-      console.log("data: ", data);
+      console.log("data of update tenant: ", data);
 
       if (data?.statusCode === 204) {
         setTenants((prev) =>
@@ -39,7 +42,7 @@ export const GetTenanats = () => {
         alert(data?.message || "Error While updating Tenant!");
       }
     } catch (err) {
-      console.log(err);
+      console.log("err: ", err);
     }
   };
 
@@ -73,9 +76,24 @@ export const GetTenanats = () => {
     padding: "10px",
   };
 
+  const filteredTenants = tenants.filter((tenant) =>
+    Object.values(tenant)
+      .join(" ")
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase())
+  );
+
   return (
     <>
       <h2>All Tenants here</h2>
+
+      <input
+        type="text"
+        placeholder="Search by name, email, industry..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        style={{ padding: "8px", marginBottom: "10px", width: "300px" }}
+      />
 
       {tenants && tenants.length > 0 ? (
         <table
@@ -97,7 +115,7 @@ export const GetTenanats = () => {
           </thead>
 
           <tbody>
-            {tenants.map((user) => (
+            {filteredTenants.map((user) => (
               <tr key={user._id}>
                 <td style={tdStyle}>{user.name}</td>
                 <td style={tdStyle}>{user.email}</td>
@@ -107,11 +125,7 @@ export const GetTenanats = () => {
                   <button onClick={() => openEditPopup(user)}>Edit</button>
                 </td>
                 <td style={tdStyle}>
-                  <button
-                    onClick={() => {
-                      handleDeleteTenant(user._id);
-                    }}
-                  >
+                  <button onClick={() => handleDeleteTenant(user._id)}>
                     Delete
                   </button>
                 </td>

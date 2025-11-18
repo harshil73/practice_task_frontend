@@ -1,8 +1,8 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Register } from "./pages/Register";
 import { Login } from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
-import ProtectedRoute from "./components/ProtectedRoute";
+import { Dashboard } from "./pages/Dashboard";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 import { Tenant } from "./pages/Tenant";
 import { CreateTenant } from "./pages/CreateTenant";
 import { GetTenanats } from "./pages/GetTenants";

@@ -29,6 +29,7 @@ export const Tenant = () => {
       ) : (
         <>
           <p>{data.message}</p>
+          <Link to="/login">Login Here</Link> <br />
         </>
       )}
     </>
